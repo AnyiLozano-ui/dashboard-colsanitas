@@ -1,13 +1,29 @@
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { api } from '../core/config/api'
+import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const router = useNavigate()
   const [showPass, setShowPass] = useState(false)
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log({ email, password })
+  const {
+    register,
+    handleSubmit
+  } = useForm({ mode: 'onChange' })
+
+  const handleLogin = async (data) => {
+    try {
+      const response = await api.post('/api/v1/admin/login', data)
+
+      if (response.data.status) {
+        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('user', JSON.stringify(response.data.user))
+        router('/dashboard')
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -44,7 +60,7 @@ export default function Login() {
 
           {/* EFECTO INFERIOR (tal cual imagen original) */}
           <div className="pointer-events-none absolute left-0 right-0 bottom-0 h-44">
-            <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-white/40 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-white/80 via-white/40 to-transparent" />
             <div className="absolute -bottom-10 left-1/2 h-52 w-[120%] -translate-x-1/2 rounded-full bg-sky-200/40 blur-3xl" />
             <div className="absolute bottom-0 left-0 right-0 h-28 bg-white/35 blur-2xl" />
           </div>
@@ -66,8 +82,7 @@ export default function Login() {
                 <div className="mt-2 relative">
                   <input
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    {...register('email', {required: {value: true, message: 'El campo es requerido'}})}
                     placeholder="admin@email.com"
                     className="w-full rounded-xl bg-white/70 border border-slate-300/60 px-4 py-3 pr-12 focus:ring-2 focus:ring-sky-300"
                     required
@@ -86,8 +101,7 @@ export default function Login() {
                 <div className="mt-2 relative">
                   <input
                     type={showPass ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    {...register('password', {required: {value: true, message: 'El campo es requerido'}})}
                     placeholder="••••••••"
                     className="w-full rounded-xl bg-white/70 border border-slate-300/60 px-4 py-3 pr-12 focus:ring-2 focus:ring-sky-300"
                     required
@@ -105,7 +119,8 @@ export default function Login() {
               {/* Button */}
               <button
                 type="submit"
-                className="w-full rounded-2xl bg-gradient-to-r from-sky-400 to-sky-500 py-4 text-lg font-semibold text-white shadow-lg hover:from-sky-500 hover:to-sky-600"
+                onClick={handleSubmit(handleLogin)}
+                className="w-full rounded-2xl bg-linear-to-r from-sky-400 to-sky-500 py-4 text-lg font-semibold text-white shadow-lg hover:from-sky-500 hover:to-sky-600"
               >
                 Iniciar sesión
               </button>

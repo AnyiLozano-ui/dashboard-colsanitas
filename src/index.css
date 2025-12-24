@@ -1,1 +1,51 @@
 @import "tailwindcss";
+
+/* Glow suave animado */
+.trophy-glow {
+  filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.55));
+  animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0% {
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 22px rgba(255, 215, 0, 0.9));
+  }
+  100% {
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
+  }
+}
+
+/* Sparkles */
+.sparkle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle, #fff 0%, #ffd700 40%, transparent 70%);
+  border-radius: 50%;
+  animation: sparkle 2s infinite ease-in-out;
+  opacity: 0;
+}
+
+/* posiciones */
+.s1 { top: 20%; left: 50%; animation-delay: 0s; }
+.s2 { top: 40%; left: 65%; animation-delay: 0.4s; }
+.s3 { top: 60%; left: 35%; animation-delay: 0.8s; }
+.s4 { top: 30%; left: 30%; animation-delay: 1.2s; }
+
+@keyframes sparkle {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+}
